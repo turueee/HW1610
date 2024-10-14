@@ -1,9 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define _USE_MATH_DEFINES
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <malloc.h>
+#include <math.h>
+
 
 int create_vector(int* count, int** vector)
 {
@@ -18,7 +20,7 @@ int create_vector(int* count, int** vector)
   *vector = (int*)malloc(*count * sizeof(int));
   for (i = 0; i < *count; i++)
   {
-    (*vector)[i] = (int)rand() % 100;
+    (*vector)[i] = (int)rand() % 10;
     printf("%d ", (int)((*vector)[i]));
   }
   printf("\n");
@@ -31,9 +33,11 @@ void free_vector(int* vector)
   return free(vector);
 }
 
+
 int sum_vectors(int n1, int* vector_1, int n2, int* vector_2,int* n3,int** vector_3)
 {
-  int i,i1,nsum;
+  int i,nsum;
+  printf("Вектор суммы: ");
   if (n1 >= n2)
     *n3 = n1;
   else
@@ -46,14 +50,13 @@ int sum_vectors(int n1, int* vector_1, int n2, int* vector_2,int* n3,int** vecto
     {
       if (i < nsum)
       {
-        i1 = i;
-        (*vector_3)[i] = (int)vector_1[i] + (int)vector_2[i1];
-        printf("%d", (int)((*vector_3)[i]));
+        (*vector_3)[i] = (int)vector_1[i] + (int)vector_2[i];
+        printf("%d ", (int)((*vector_3)[i]));
       }
       else
       {
         (*vector_3)[i] = (int)vector_1[i];
-        printf("%d", (int)((*vector_3)[i]));
+        printf("%d ", (int)((*vector_3)[i]));
       }
     }
   }
@@ -64,14 +67,13 @@ int sum_vectors(int n1, int* vector_1, int n2, int* vector_2,int* n3,int** vecto
     {
       if (i < nsum)
       {
-        i1 = i;
-        (*vector_3)[i] = (int)vector_1[i] + (int)vector_2[i1];
-        printf("%d", (int)((*vector_3)[i]));
+        (*vector_3)[i] = (int)vector_1[i] + (int)vector_2[i];
+        printf("%d ", (int)((*vector_3)[i]));
       }
       else
       {
         (*vector_3)[i] = (int)vector_2[i];
-        printf("%d", (int)((*vector_3)[i]));
+        printf("%d ", (int)((*vector_3)[i]));
       }
     }
   }
@@ -79,11 +81,47 @@ int sum_vectors(int n1, int* vector_1, int n2, int* vector_2,int* n3,int** vecto
 }
 
 
+int mul_vectors(int n1, int* vector_1, int n2, int* vector_2)
+{
+  int i, nmul,mul = 0;
+  if (n1 > n2)
+    nmul = n2;
+  else
+    nmul = n1;
+  for (i = 0; i < nmul; i++)
+    mul += (vector_1[i] * vector_2[i]);
+  return mul;
+}
+
+
+double len_of_vector(int n, int* vector)
+{
+  int i = 0,len = 0;
+  double res  =0;
+  for (i = 0; i < n; i++)
+  {
+    len += (vector[i] * vector[i]);
+  }
+  res = pow(len,0.5);
+  return res;
+}
+
+
+double angle_between_vectors(int n1, int* vector1, int n2, int* vector2)
+{
+  double res;
+  res = (mul_vectors(n1, vector1, n2, vector2) / (double)(len_of_vector(n1, vector1) * len_of_vector(n2, vector2)));
+  res = acos(res)*(double)180/M_PI;
+  return res;
+}
 
 
 int main()
 {
-  int* vector_1, vector_2, vector_3, errorCode_1 = 0, errorCode_2 = 0, errorCode_3 = 0;
+  int errorCode_1 = 0, errorCode_2 = 0, errorCode_3 = 0;
+  int* vector_1;
+  int* vector_2;
+  int* vector_3;
   int n1 = 0, n2 = 0,n3 = 0;
   system("chcp 1251>nul");
   srand(time(0));
@@ -96,6 +134,9 @@ int main()
   errorCode_3 = sum_vectors(n1, vector_1, n2, vector_2, &n3, &vector_3);
   if (errorCode_3 != 0)
     return errorCode_1;
+  printf("\nПроизведение векторов: %d", mul_vectors(n1, vector_1, n2, vector_2));
+  printf("\nДлина первого вектора: %lf", len_of_vector(n1, vector_1));
+  printf("\nУгол между векторами: %lf", angle_between_vectors(n1, vector_1, n2, vector_2));
   free_vector(vector_1);
   free_vector(vector_2);
   free_vector(vector_3);
