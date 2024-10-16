@@ -116,6 +116,18 @@ double angle_between_vectors(int n1, int* vector1, int n2, int* vector2)
 }
 
 
+void mul_vector_on_scal(int n, int* vector, int scal)
+{
+  int i = 0;
+  printf("\n");
+  for (i; i < n; i++)
+  {
+    vector[i] *= scal;
+    printf("%d ", vector[i]);
+  }
+}
+
+
 int main()
 {
   int errorCode_1 = 0, errorCode_2 = 0, errorCode_3 = 0;
@@ -130,10 +142,11 @@ int main()
     return errorCode_1;
   errorCode_2 = create_vector(&n2, &vector_2);
   if (errorCode_2 != 0)
-    return errorCode_1;
+    return errorCode_2;
   errorCode_3 = sum_vectors(n1, vector_1, n2, vector_2, &n3, &vector_3);
   if (errorCode_3 != 0)
-    return errorCode_1;
+    return errorCode_3;
+  mul_vector_on_scal(n1, vector_1, -1);
   printf("\nПроизведение векторов: %d", mul_vectors(n1, vector_1, n2, vector_2));
   printf("\nДлина первого вектора: %lf", len_of_vector(n1, vector_1));
   printf("\nУгол между векторами: %lf", angle_between_vectors(n1, vector_1, n2, vector_2));
